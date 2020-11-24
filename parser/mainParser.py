@@ -1,9 +1,9 @@
 import json
 from urllib.parse import urljoin
-from product import product_dns
-from product import product_citilink
-from bs4 import BeautifulSoup
+
+import parser
 import requests
+from bs4 import BeautifulSoup
 from requests.exceptions import Timeout
 
 
@@ -47,7 +47,7 @@ def get_products_dns(search: str):
 
     products_dns=[]
     for tag in tags_dns:
-        products_dns.append(product_dns(str(tag)))
+        products_dns.append(parser.products.product_dns(str(tag)))
         print(products_dns[len(products_dns)-1].to_string())
 
     return products_dns
@@ -71,12 +71,37 @@ def get_products_citilink(search: str):
     tags_ct = root_ct.find_all(class_="js--subcategory-product-item")   # поиск по предложениям
     i=0
     for tag in tags_ct:                                                 # создание объектов продукта
-        items_ct.append(product_citilink(str(tag)))
+        items_ct.append(parser.products.product_citilink(str(tag)))
         items_ct[i].to_string()
         i+=1
         print("____________________________________________________________________________________________________________________________________________________")
     return items_ct
 
+
+def get_products_eldorado(search: str):
+    headers_eldorado = { # Заголовки
+        'X-Requested-With': 'XMLHttpRequest',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0'
+    }
+    url = f'https://www.eldorado.ru/search/catalog.php?q={search}'
+    # session_eldorado = requests.session()               # Cоздаётся объект тип session
+    # session_eldorado.headers.update(headers_eldorado)   # загружаются заголовки
+    # rs_eldorado = session_eldorado.get(url)             # делаем запрос
+    test = requests.get(url)
+    print(test.content)
+    # data_eldorado = rs_eldorado.json()                  # переводим в json
+    # print(rs_eldorado)
+
+    root_eldorado = BeautifulSoup(test.content['html'], 'html.parser')
+    items_eldorado = []
+    tags_ct = root_eldorado.find_all(class_="sc-1w9a1pg-0 sc-19ibhqc-0 gUmybO")   # поиск по предложениям
+    i=0
+    for tag in tags_ct:                                                 # создание объектов продукта
+        items_ct.append(parser.products.product_citilink(str(tag)))
+        items_ct[i].to_string()
+        i+=1
+        print("____________________________________________________________________________________________________________________________________________________")
+    return items_ct
 
 if __name__ == '__main__':
     # y_req=input("Введите ваш запрос:\t")
@@ -103,7 +128,8 @@ if __name__ == '__main__':
     # name = 'телевизор xiaomi'
     # items_dns = get_products_dns(name)
     # try:
-    items_dns = get_products_dns(y_req)
+    items_eldorado=get_products_eldorado(y_req)
+    # items_dns = get_products_dns(y_req)
     # except:
     #     print("Была какая-то ошибка, но норм..")
 
