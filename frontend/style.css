@@ -1,0 +1,59 @@
+.header {
+    background-color: #000000;
+    height: 8%;
+    margin-left: -1%;
+    margin-top: -0.5%;
+}
+
+
+
+
+
+
+
+
+.bascket {
+    -webkit-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    height: 90%;
+    margin-top: -4%;
+    margin-left:96%;
+    width: 61px;
+}
+
+.boxContainer
+{
+    -webkit-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    height: 90%;
+    margin-top: -3%;
+    margin-left:43%;
+    width: 0%;
+}
+
+.search
+{
+    border:none;
+    border-radius: 50px;
+    font-size:18px;
+    font-family: "Nunito";
+    color:#424242;
+    font-weight: 500;
+}
+
+.search:focus
+{
+    outline:none;
+}
+
+
+body, html {
+    width: 100%;
+    height: 100%;
+    background: rgb(255, 255, 255);
+    font: normal 100% arial,sans-serif;
+}
