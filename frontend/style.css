@@ -36,6 +36,7 @@
 }
 
 
+
 * {box-sizing: border-box;}
 form {
   position: relative;
@@ -68,6 +69,21 @@ button:before {
   font-family: FontAwesome;
   font-size: 16px;
   color: #F9F0DA;
+=======
+.search
+{
+    border:none;
+    border-radius: 50px;
+    font-size:18px;
+    font-family: "Nunito";
+    color:#424242;
+    font-weight: 500;
+}
+
+.search:focus
+{
+    outline:none;
+
 }
 
 
