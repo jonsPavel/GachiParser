@@ -6,38 +6,29 @@ import requests
 class Product_eldorado:
     name = "eldorado"
     def __init__(self,js__subcategory_product_item):
-
         soup = BeautifulSoup(js__subcategory_product_item, 'html.parser')
-
+        prettify=soup.prettify()
         """Вытаскивание словаря с аттрибутами 'price' и 'shortName'    """
-        attributes_dictionary = soup.find('div').attrs
-        data_params = attributes_dictionary["data-params"]
-        decoded = json.loads(data_params)
+        image_link=soup.find('div',class_='AkWZIIC').find('img',attrs={'srcset':True})['src']
 
-        image_attr = soup.find("img").attrs
+        attributes_list_tag = soup.find('ul',class_='_1hV310P').contents # характеристики
+        attributes_list=[]
+        for i in attributes_list_tag:
+            attributes_list.append(i.text)
+        name_link = soup.find('div',class_='_2fFxlhy') # название, ссылка
+        name=name_link.contents[0].text
+        link='https://www.eldorado.ru/'+name_link.contents[0].attrs['href']
+        price=soup.find('span',class_='wcf6ic-1 sc-1nnsxdl-1 gILnXT').text
 
-        link_attr = soup.find("a").attrs
-
-        description = str(soup.find("p", class_="short_description").get_text())
         flag_d = False
         i = 0
 
-        for w in description:
-            if flag_d and ord(w) != 32:
-                description = str(description[i:len(description)-1])
-                break
-            if w == ";":
-                flag_d = True
-            i += 1
         # description=description.strip(" ")
 
-        self.link = link_attr["href"]
-        self.image =image_attr["data-src"]
-        self.name = decoded["shortName"]
-        self.price = decoded["price"]
-        self.description = description
-
-
+        self.link = link
+        self.image =image_link
+        self.name = name
+        self.price = price
         pass
 
     def to_string(self):
@@ -45,7 +36,6 @@ class Product_eldorado:
         print("Цена товара:\t\t\t\t"+str(self.price))
         print("Ссылка на картинку :\t\t"+str(self.image))
         print("Ссылка на продукт товара:\t"+str(self.link))
-        print("Описание товара:\t"+str(self.description.strip(' ')))
 
 
 class get_eldorado:
@@ -59,16 +49,14 @@ class get_eldorado:
         session_eldorado = requests.session()               # Cоздаётся объект тип session
         session_eldorado.headers.update(headers_eldorado)   # загружаются заголовки
         response_eldorado = session_eldorado.get(url)             # делаем запрос
-        #test = requests.get(url)
-        #print(test.content)
-        # data_eldorado = response_eldorado.json()                  # переводим в json
-        # print(response_eldorado)
 
-        bs_eldorado = BeautifulSoup(response_eldorado.content, 'html.parser')
+
+        bs_eldorado = BeautifulSoup(response_eldorado.text, 'html.parser')
         items_eldorado = []
-        tags_ct = bs_eldorado.find_all(class_="sc-1w9a1pg-0 sc-19ibhqc-0 gUmybO")  # поиск по предложениям
+        tags_eldorado = bs_eldorado.find_all('li',attrs={'class': True, 'data-dy': True, 'data-id': True,
+                                                    'data-product-index': True})  # поиск по предложениям
         i = 0
-        for tag in tags_ct:  # создание объектов продукта
+        for tag in tags_eldorado:  # создание объектов продукта
             items_eldorado.append(Product_eldorado(str(tag)))
             items_eldorado[i].to_string()
             i += 1
@@ -77,5 +65,12 @@ class get_eldorado:
         return items_eldorado
 
 if __name__=="__main__":
+
     testEldorado = get_eldorado()
-    testEldorado.get_products_eldorado("xiaomi+redmi")
+    print("Введите ваш запрос:")
+    y_req=input().replace(" ","+")
+    items_eldorado=testEldorado.get_products_eldorado(y_req)
+    for i in items_eldorado:
+        i.to_string()
+        print(
+            "____________________________________________________________________________________________________________________________________________________")
