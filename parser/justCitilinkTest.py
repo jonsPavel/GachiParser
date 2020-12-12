@@ -30,10 +30,10 @@ class get_citilink:
         for tag in tags_ct:  # создание объектов продукта
 
             items_ct.append(product_citilink(str(tag)))
-            items_ct[i].to_string()
+            # items_ct[i].to_string()
             i += 1
-            print(
-                "____________________________________________________________________________________________________________________________________________________")
+            # print(
+            #     "____________________________________________________________________________________________________________________________________________________")
         return items_ct
 
 
@@ -66,19 +66,22 @@ class product_citilink:
 
 
 if __name__ == '__main__':
-    y_req=input()
-    y_req.replace(" ","+")
-    # y_req="xiaomi+redmi"
     ps = get_citilink()
-
-
+    print("Введите ваш запрос:")
+    y_req=input().replace(" ","+")
     items_ct = ps.get_products_citilink(y_req)
 
-    print("Была какая-то ошибка, но норм..")
 
-    print(f'Search {y_req!r}...')
+    def sortByPrice(product_citilink ):
+        return int(product_citilink.price)
+    items_ct.sort(key=sortByPrice,reverse=True)
 
-    print(len(items_ct))
-    print(f'  Result ({len(items_ct)}):')
-    # for title, url in items_ct:
-    #     print(f'    {title!r}: {url}')
+    for i in items_ct:
+        i.to_string()
+        print(
+            "____________________________________________________________________________________________________________________________________________________")
+
+    # print(f'Search {y_req!r}...')
+    #
+    # print(len(items_ct))
+    # print(f'  Result ({len(items_ct)}):')
