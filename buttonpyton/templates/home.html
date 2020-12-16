@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <title>GachiParcer</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <div class="header">
+            <div >
+                <a href="index.html" title="GachiParcer"><img src="{% static "images/star_PNG76895.png" %}" width="4.5%" height="4.5%"></a>
+            </div>
+            <div class="bascket">
+                <a href="bascket.html" title="Корзина"><img src="{% static "images/shopping_cart_PNG3.png" %}" width="100%" height="100%"></a>
+            </div>
+			
+			<form id="gp-search-form" action="/external/" method="post">
+				<button type="submit"></button>
+				{% csrf_token %}
+				<input type="search" name="param" placeholder="Поиск товаров">
+			</form>
+			<div>
+				<towars>
+					<br><br><br><br><br>
+					{{data_external}}
+					<table>
+					{% for lan in langs %}
+					<tr>
+					<th colspan="3">{{lan.name}}</th>
+					</tr>
+					<tr>
+					<th rowspan={{lan.quantyty}}><img src={{lan.image_Link}}></th>
+					<td>
+					{% for lan1 in lan.data_about_magazines %}
+					<tr><td align="right"><a href={{lan1.link}}>{{lan1.name}}</a></td><td>{{lan1.price}}</td></tr>
+					{% endfor %}
+					</td></tr>					
+					{% endfor %}
+					</table>
+				</towars>
+			</div>
+        </div>       
+    </body>
+</html>
