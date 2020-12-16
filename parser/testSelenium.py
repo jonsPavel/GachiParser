@@ -11,6 +11,24 @@ class magazine_name_price:
         self.link=link
 
 
+class reviews:                                                                                                                                  #new
+    def __init__(self,stars:str="0,0,0,0"):
+        if stars:
+            splitter=stars.split(',')
+            self.terribly=splitter[0]
+            self.bad = splitter[1]
+            self.good=splitter[2]
+            self.nice=splitter[3]
+
+
+class unexpected:                                                                                                                                  #new
+    def __init__(self,html_data:str):
+        soup = BeautifulSoup(html_data, 'html.parser')
+        # self.title=soup.get('title')
+        self.title=soup.find('span',class_='brand-cat-pict').get('title')
+        # self.link=soup.get('href')
+        self.link='https://www.e-katalog.ru'+soup.find('span',class_='brand-cat-pict').get('href')
+
 
 
 class Product_eKatalog:
@@ -20,19 +38,21 @@ class Product_eKatalog:
         # self.name=selsectedTag.text  - если нам нужно имя "без типа", например "xiaome redmi", а не "Моб. телефон... x. r."
         selsectedTag=soup.find('img',{"src":True})
         self.image_Link='https://www.e-katalog.ru'+selsectedTag.attrs["src"]
-        self.name=selsectedTag.attrs['alt']
+        self.name=selsectedTag.attrs['alt'] # там словарь, просто вытаскиваю
 
         self.magazines=soup.find_all('td',class_='model-shop-name')
         self.magazines_price=soup.find_all('td',class_='model-shop-price')
         # self.magazines_tr=soup.find_all('tr')
 
         self.data_about_magazines=[]
-
+        self.description=soup.find('div',class_='model-short-description').get('data-descr')                                                                 # new
+        stars=str(soup.find('td',class_='short-opinion-icons').find_all('sub')).replace("<sub>","").replace("</sub>","").replace('[',"").replace(']','')     # new
+        self.review=reviews(stars)                                                                                                                           # new
         count_pricer=0
         for magazine in self.magazines:
             data_magazine=BeautifulSoup(str(magazine),'html.parser')   # .contents[0]
             data_magazine_price=BeautifulSoup(str(self.magazines_price[count_pricer]), 'html.parser')   # .contents[0]
-            link=data_magazine.find('a').get('onmouseover')
+            link=data_magazine.find('a').get('onmouseover') # беру содержимое атрибута
             #
             # end_href = link.index()
             # new_tag = link[11:end_href]
@@ -56,6 +76,8 @@ class Product_eKatalog:
     def ToString(self):
         print("Продукт: "+self.name)
         print("Ссылка на картинку: "+self.image_Link)
+        print("Описание: "+self.description)
+        print("Отзывы: "+str(self.review.__dict__))
         print("Магазины и цены: ")
         for i in self.data_about_magazines:
             print(i.__dict__)
@@ -81,22 +103,43 @@ options.add_argument('--headless')
 options.add_argument('--disable-extensions')
 options.add_argument('--disable-gpu')
 browser = webdriver.Chrome(executable_path=chromedriver, chrome_options=options)
-endDriver=time()
 
-startGet=time()
 
 target=input("Введите однозначное название товара: ").replace(' ','+')
 url = f'https://www.e-katalog.ru/ek-list.php?search_={target}'
 browser.get(url)
 # browser.get('https://www.e-katalog.ru/ek-list.php?search_=xiaomi+redmi+note+7')
-endGet=time()
 
 
-startBS=time()
+
+
 html_data=browser.page_source
 soup = BeautifulSoup(html_data, 'html.parser')
-tags = soup.find_all('table', class_='model-short-block')  # поиск по предложениям
-endBS=time()
+
+
+# Тут обрабатывается возможные неопределенные отоброжения ( например, продукты бренда)
+uncertain_req = soup.find_all('div',class_='brand-cat-div')
+unexpected_items=[]
+if not uncertain_req:                                                                         #new
+    tags = soup.find_all('table', class_='model-short-block')  # поиск по предложениям
+else:
+    for select in uncertain_req:
+        unexpected_items.append(unexpected(str(select)))
+    print('Неопределенный результат, уточните поиск')
+    print('Тут юзер выбирает категорию')
+
+    print('Нажал на нужную')
+    new_link=unexpected_items[0].link
+    url = new_link  # url присваивается поле link Выбранного элемента
+    browser.get(url)  # делается запрос
+    html_data = browser.page_source  # хттмл
+    new_soup = BeautifulSoup(html_data, 'html.parser')
+    tags = new_soup.find_all('table', class_='model-short-block')  # поиск по предложениям
+for case in unexpected_items:
+    print(case.__dict__)
+
+
+# далее идёт поиск как будто всё норм и выборка
 
 
 items = []
@@ -107,10 +150,6 @@ for i in (items):
     i.ToString()
     print("__________________________________________________________________________________________________________________")
 
-
-print("Initialize driver: "+str(endDriver-startDriver))
-print("Initialize get: "+str(endGet-startGet))
-print("Initialize soup: "+str(endBS-startBS))
 
 assert "No results found." not in browser.page_source
 
