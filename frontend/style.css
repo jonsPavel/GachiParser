@@ -1,9 +1,9 @@
-.header {
+/* .header {
     background-color: #000000;
     height: 8%;
     margin-left: -1%;
     margin-top: -0.5%;
-}
+} */
 
 
 
@@ -11,70 +11,102 @@
 
 
 
+#bascket {
 
-.bascket {
-    -webkit-background-size: contain;
-    background-size: contain;
-    background-repeat: no-repeat;
     display: block;
     height: 90%;
-    margin-top: -4%;
-    margin-left:96%;
-    width: 61px;
+    margin-top: 3%;
+    margin-left:39%;
+    width: 400px;
 }
 
-.boxContainer
-{
-    -webkit-background-size: contain;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: block;
-    height: 90%;
-    margin-top: -3%;
-    margin-left:43%;
-    width: 0%;
-}
+html {
+  height: 100%; /* Высота веб-страницы */
+  background: #000 url(images/bg.gif) 
+        no-repeat ;
+  -moz-background-size: 100%; /* Firefox 3.6+ */
+  -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+  -o-background-size: 100%; /* Opera 9.6+ */
+  background-size: 100%; /* Современные браузеры */ /* Путь к графическому файлу с фоном */
+  color: #fff; /* Белый цвет текста */
+ }
 
 
 
 * {box-sizing: border-box;}
 form {
   position: relative;
-  width: 300px;
-  margin: -2.8% auto;
+  width: 60%;
+  margin: auto;
+  margin-top:24%;
+  border-radius: 50px;
 }
 input {
   width: 100%;
-  height: 42px;
+  height: 72px;
   padding-left: 10px;
-  border: 2px solid #7BA7AB;
+  border: 2px solid  #474545;
   border-radius: 5px;
   outline: none;
-  background: #F9F0DA;
+  background: #ffffff;
   color: #9E9C9C;
+  border-radius: 50px;
+  font-size: 2em;
 }
+/* ::placeholder {
+  color: rgb(0, 0, 0);
+  font-size: 2em;
+} */
+
+
+
 button {
   position: absolute; 
   top: 0;
   right: 0px;
-  width: 42px;
-  height: 42px;
+  width: 72px;
+  height: 72px;
   border: none;
-  background: #7BA7AB;
-  border-radius: 0 5px 5px 0;
+  background: #474545;
+  border-radius: 0 50px 50px 0;
+  /* border-radius: 050px; */
   cursor: pointer;
 }
-button:before {
+button:before
+{
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 22px;
+  right: 0;
+  bottom: 0;
+  left: 22px;
+  width: 12px;
+  height: 2px;
+  background: rgb(255, 2, 2);
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+
+button:after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid rgb(255, 0, 0);
+  transition: all .5s;
+}
+ /* {
   content: "\f002";
   font-family: FontAwesome;
   font-size: 16px;
-  color: #F9F0DA;
-}
+  color: #ff1100;
+} */
 
 
-body, html {
-    width: 100%;
-    height: 100%;
-    background: rgb(255, 255, 255);
-    font: normal 100% arial,sans-serif;
-} 
