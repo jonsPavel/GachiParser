@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <title>GachiParcer</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'styleforsearch.css'%}">
+		<script>
+		function funct(str, str2,str3,str4,str5, str6){
+			let timed = {
+				image_Link: str3,
+				quantyty: str2,
+				d1: str4,
+				d2: str5,
+				d3: str6
+			}
+			localStorage.setItem(str,JSON.stringify(timed));
+		}
+		function temp(){
+			let tempet
+			let template = "<table>";
+			let tembr;
+			for(let i=0; i<localStorage.length; i++) {
+			let key = localStorage.key(i)
+			let tem = localStorage.getItem(key)
+			let t = JSON.parse(tem).image_Link
+			let t2 = JSON.parse(tem).quantyty
+			let t3 = JSON.parse(tem).d1
+			let t4 = JSON.parse(tem).d2
+			let t5 = JSON.parse(tem).d3
+			template = template + "<table id='" + key + "'>"
+					+"<tr>"+
+					"<th colspan='3'>"+key+"</th>"+
+					"</tr>"+
+					"<tr>"+
+					"<th rowspan="+t2+">"+"<img src= "+t+ ">"+ "</th>"+ "<th>"+ "<button class='button2' onclick=\"" +'delet(\''+key+'\')'+"\">"+ "Удалить" + "</button>"+"</th>"+"<td>";
+			for(let i=1; i<t2; i++){
+					template=template + "<tr>"+"<td align='right'>"+"<a href="+t5[i]+">"+t4[i]+"</a>"+"</td>"+"<td>"+t3[i]+"</td>"+"</tr>"
+			}
+			template = template	+"</td>"+"</tr>"+"</table>";		
+			}
+			var stat = document.getElementById(123);
+			template = template + "</table>";
+			stat.innerHTML = template;
+		}
+		function delet(str){
+			localStorage.removeItem(str);
+			document.getElementById(str).remove();
+		}
+		</script>
+    </head>
+    <body onload="temp()">
+        <div class="header">
+            <form id="gp-search-form" action="external" method="post">
+			{% csrf_token %}
+                <input type="search" name="param" placeholder="Введите название товара для поиска">
+                <button id="1234" class = 'button1' type="submit" onclick="if (this.getAttribute('clicked') == '1') { return false; } else { this.setAttribute('clicked', '1'); }"></button>
+              </form>
+        </div>    
+        <div id="bascket">
+            <a href="{% url 'backet' %}"  title="Корзина"><img src="{% static "images/basket.png" %}" width="100%" height="100%"></a>
+        </div>   
+        <div id="logo">
+            <a href="{% url 'home' %}" title="GachiParcer"><img src="{% static "images/logo2.png" %}" width="100%" height="100%"></a>
+        </div> 
+        <div id="123">
+		</div>
+    </body>
+</html> 
